@@ -1,0 +1,23 @@
+# PayPal Configuration Template
+# Copy this file to 'paypal.properties' and update with your actual credentials
+# WARNING: Keep paypal.properties secure and never commit to public repositories
+
+# PayPal Sandbox Credentials (for testing)
+paypal.client.id=your-sandbox-client-id-here
+paypal.client.secret=your-sandbox-client-secret-here
+paypal.mode=sandbox
+
+# For Production (uncomment and update when ready for live payments):
+# paypal.client.id=your-live-client-id-here
+# paypal.client.secret=your-live-client-secret-here
+# paypal.mode=live
+
+# Return URLs (update these for your domain in production)
+paypal.return.success.url=http://localhost:8081/payment-success
+paypal.return.cancel.url=http://localhost:8081/payment-cancelled
+
+# Instructions:
+# 1. Copy this file to 'paypal.properties' (without .template)
+# 2. Get your PayPal credentials from https://developer.paypal.com
+# 3. Replace the placeholder values with your actual credentials
+# 4. Test with sandbox mode first, then switch to live for production

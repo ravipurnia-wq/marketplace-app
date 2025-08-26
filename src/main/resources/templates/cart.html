@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cart - TechMarket Pro</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- PayPal JavaScript SDK -->
+    <script src="https://www.paypal.com/sdk/js?client-id=Abjs4rnESL6Z8m18riVyXR7RAhHM-q1py-zd3cT7rlWFTrlEioLW6Ax5a8w1NelDqRHHwpwWCIA3ZZ14&components=buttons&currency=USD"></script>
+</head>
+<body>
+    <!-- Walmart-style Header -->
+    <header class="walmart-header">
+        <!-- Top Header -->
+        <div class="header-top">
+            <div class="container">
+                <div class="header-links">
+                    <a href="/about">About</a>
+                    <a href="/contact">Contact</a>
+                </div>
+                <div class="header-links">
+                    <span>Save money. Live better.</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Main Header -->
+        <div class="header-main">
+            <div class="container">
+                <div class="header-content">
+                    <a href="/" class="logo">TechMarket Pro</a>
+                    
+                    <div class="search-container">
+                        <input type="text" class="search-input" placeholder="Search everything at TechMarket Pro online and in store">
+                        <button class="search-btn">Search</button>
+                    </div>
+                    
+                    <div class="header-actions">
+                        <a href="/profile" class="header-action">
+                            <span class="action-icon">👤</span>
+                            <span>Account</span>
+                        </a>
+                        <a href="/orders" class="header-action">
+                            <span class="action-icon">📦</span>
+                            <span>Orders</span>
+                        </a>
+                        <a href="/cart" class="header-action">
+                            <span class="action-icon">🛒</span>
+                            <span>Cart (<span th:text="${cart.totalItems}">0</span>)</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation Menu -->
+    <nav class="nav-menu">
+        <div class="container">
+            <div class="nav-content">
+                <a href="/" class="nav-item">Home</a>
+                <a href="/products" class="nav-item">All Products</a>
+                <a href="/products?category=electronics" class="nav-item">Electronics</a>
+                <a href="/products?category=gadgets" class="nav-item">Gadgets</a>
+                <a href="/products?category=accessories" class="nav-item">Accessories</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="container">
+            <div style="margin-bottom: 20px;">
+                <h1 style="font-size: 28px; font-weight: 600; margin-bottom: 8px;">Cart</h1>
+                <p style="color: #46474a;">Review your items and checkout when ready</p>
+            </div>
+            
+            <div th:if="${cart.empty}" class="cart-container text-center" style="padding: 60px 20px;">
+                <div style="font-size: 48px; margin-bottom: 20px;">🛒</div>
+                <h2 style="margin-bottom: 16px;">Your cart is empty</h2>
+                <p style="color: #46474a; margin-bottom: 24px;">Start adding items to your cart to see them here.</p>
+                <a href="/products" class="btn btn-primary">Continue Shopping</a>
+            </div>
+            
+            <div th:unless="${cart.empty}" style="display: grid; grid-template-columns: 1fr 300px; gap: 24px;">
+                <!-- Cart Items -->
+                <div class="cart-container">
+                    <div class="cart-header">
+                        <h2 class="cart-title">Items in your cart</h2>
+                    </div>
+                    
+                    <div th:each="item : ${cart.items}" class="cart-item">
+                        <div class="cart-item-image">
+                            <img th:src="${item.productImageUrl}" th:alt="${item.productName}" 
+                                 onerror="this.src='https://via.placeholder.com/80x80/f0f0f0/666?text=No+Image'">
+                        </div>
+                        <div class="cart-item-details">
+                            <h4 th:text="${item.productName}"></h4>
+                            <div class="cart-item-price">$<span th:text="${#numbers.formatDecimal(item.productPrice, 1, 2)}"></span></div>
+                        </div>
+                        <div class="quantity-control">
+                            <form th:action="@{/cart/update}" method="post" style="display: contents;">
+                                <input type="hidden" name="productId" th:value="${item.productId}">
+                                <button type="button" class="quantity-btn" onclick="changeQuantity(this, -1)">−</button>
+                                <input type="number" name="quantity" th:value="${item.quantity}" min="1" max="99" 
+                                       class="quantity-input" onchange="this.form.submit()">
+                                <button type="button" class="quantity-btn" onclick="changeQuantity(this, 1)">+</button>
+                            </form>
+                        </div>
+                        <div class="cart-item-price" style="font-weight: 600;">
+                            $<span th:text="${#numbers.formatDecimal(item.subtotal, 1, 2)}"></span>
+                        </div>
+                        <div>
+                            <form th:action="@{/cart/remove}" method="post">
+                                <input type="hidden" name="productId" th:value="${item.productId}">
+                                <button type="submit" class="btn btn-secondary btn-small">Remove</button>
+                            </form>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top: 24px; padding-top: 24px; border-top: 1px solid #e5e5e5;">
+                        <form th:action="@{/cart/clear}" method="post" style="display: inline;">
+                            <button type="submit" class="btn btn-secondary btn-small" 
+                                    onclick="return confirm('Are you sure you want to clear your cart?')">
+                                Clear Cart
+                            </button>
+                        </form>
+                        <a href="/products" class="btn btn-secondary btn-small" style="margin-left: 12px;">Continue Shopping</a>
+                    </div>
+                </div>
+                
+                <!-- Cart Summary -->
+                <div class="cart-summary">
+                    <h3 style="margin-bottom: 16px;">Order Summary</h3>
+                    
+                    <div class="summary-row">
+                        <span>Subtotal (<span th:text="${cart.totalItems}"></span> items)</span>
+                        <span>$<span th:text="${#numbers.formatDecimal(cart.total, 1, 2)}"></span></span>
+                    </div>
+                    
+                    <div class="summary-row">
+                        <span>Shipping</span>
+                        <span style="color: #00a652;">FREE</span>
+                    </div>
+                    
+                    <div class="summary-row">
+                        <span>Estimated tax</span>
+                        <span>$<span th:text="${#numbers.formatDecimal(cart.total * 0.08, 1, 2)}"></span></span>
+                    </div>
+                    
+                    <div class="summary-row summary-total">
+                        <span>Estimated total</span>
+                        <span>$<span th:text="${#numbers.formatDecimal(cart.total * 1.08, 1, 2)}"></span></span>
+                    </div>
+                    
+                    <!-- PayPal Checkout Button Container -->
+                    <div id="paypal-button-container" style="margin-top: 20px;"></div>
+                    
+                    <!-- Fallback button for when PayPal fails to load -->
+                    <button id="fallback-checkout" onclick="checkoutWithPayPal()" class="btn btn-primary w-full" style="font-size: 16px; padding: 16px; display: none;">
+                        Continue to Checkout
+                    </button>
+                    
+                    <div style="text-align: center; margin-top: 16px;">
+                        <img src="https://via.placeholder.com/200x30/0071ce/white?text=PayPal+Accepted" 
+                             alt="PayPal Accepted" style="height: 30px;">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <script>
+        function changeQuantity(button, delta) {
+            const input = button.parentElement.querySelector('.quantity-input');
+            const newValue = parseInt(input.value) + delta;
+            if (newValue >= 1 && newValue <= 99) {
+                input.value = newValue;
+                input.form.submit();
+            }
+        }
+        
+        // Get cart total from the page
+        function getCartTotal() {
+            // Find the estimated total in the summary section
+            const totalElement = document.querySelector('.summary-total span:last-child span');
+            if (totalElement) {
+                const totalText = totalElement.textContent.replace('$', '');
+                return parseFloat(totalText) || 0;
+            }
+            return 0;
+        }
+        
+        // PayPal Button Integration
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if PayPal SDK loaded
+            if (typeof paypal !== 'undefined') {
+                renderPayPalButton();
+            } else {
+                // Show fallback button if PayPal SDK fails to load
+                document.getElementById('fallback-checkout').style.display = 'block';
+            }
+        });
+        
+        function renderPayPalButton() {
+            paypal.Buttons({
+                // Create order
+                createOrder: function(data, actions) {
+                    const total = getCartTotal();
+                    
+                    if (total <= 0) {
+                        alert('Cart is empty or total calculation failed');
+                        return;
+                    }
+                    
+                    return actions.order.create({
+                        purchase_units: [{
+                            description: 'TechMarket Pro Cart Purchase',
+                            amount: {
+                                currency_code: 'USD',
+                                value: total.toFixed(2)
+                            }
+                        }]
+                    });
+                },
+                
+                // Handle successful payment
+                onApprove: function(data, actions) {
+                    return actions.order.capture().then(function(orderData) {
+                        console.log('Payment successful:', orderData);
+                        
+                        // Show success message
+                        alert('Payment completed successfully! Order ID: ' + orderData.id);
+                        
+                        // Redirect to success page
+                        window.location.href = '/payment-success?paypal=true&orderID=' + orderData.id;
+                    });
+                },
+                
+                // Handle payment errors
+                onError: function(err) {
+                    console.error('PayPal error:', err);
+                    alert('An error occurred during payment. Please try again.');
+                },
+                
+                // Handle cancelled payments
+                onCancel: function(data) {
+                    console.log('Payment cancelled:', data);
+                    alert('Payment was cancelled');
+                },
+                
+                // Button styling
+                style: {
+                    layout: 'vertical',
+                    color: 'blue',
+                    shape: 'rect',
+                    height: 50,
+                    label: 'checkout'
+                }
+            }).render('#paypal-button-container');
+        }
+        
+        // Fallback checkout function (existing implementation)
+        async function checkoutWithPayPal() {
+            const button = event.target;
+            const originalText = button.innerHTML;
+            
+            button.innerHTML = '⏳ Processing...';
+            button.disabled = true;
+            
+            try {
+                const response = await fetch('/api/payments/paypal/cart', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                });
+                
+                const result = await response.json();
+                
+                if (result.status === 'success') {
+                    button.innerHTML = '✅ Redirecting to PayPal...';
+                    
+                    const confirmMessage = `🛒 PayPal Checkout - TechMarket Pro\n\n` +
+                        `Items: ${result.itemCount}\n` +
+                        `Subtotal: $${result.cartTotal}\n` +
+                        `Tax: $${result.tax}\n` +
+                        `Total: $${result.finalTotal}\n\n` +
+                        `Proceed to secure PayPal checkout?`;
+                    
+                    if (confirm(confirmMessage)) {
+                        window.location.href = result.paypalUrl;
+                    } else {
+                        button.innerHTML = originalText;
+                        button.disabled = false;
+                    }
+                } else {
+                    button.innerHTML = '❌ Failed';
+                    alert('Checkout failed: ' + result.message);
+                    setTimeout(() => {
+                        button.innerHTML = originalText;
+                        button.disabled = false;
+                    }, 2000);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                button.innerHTML = '❌ Error';
+                alert('An error occurred during checkout. Please try again.');
+                setTimeout(() => {
+                    button.innerHTML = originalText;
+                    button.disabled = false;
+                }, 2000);
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - TechMarket Pro</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <a href="/">TechMarket Pro</a>
+            </div>
+            <div class="nav-links">
+                <a href="/">Home</a>
+                <a href="/products">Products</a>
+                <a href="/about">About</a>
+                <a href="/contact">Contact</a>
+                <div sec:authorize="isAuthenticated()">
+                    <a href="/cart">Cart</a>
+                    <a href="/orders">Orders</a>
+                    <a href="/profile">Profile</a>
+                    <a href="/logout">Logout</a>
+                </div>
+                <div sec:authorize="hasRole('ADMIN')">
+                    <a href="/admin">Admin</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h1>My Profile</h1>
+        
+        <div th:if="${success}" class="alert alert-success">
+            <span th:text="${success}"></span>
+        </div>
+        
+        <div class="profile-content">
+            <div class="profile-info">
+                <h3>Account Information</h3>
+                <form th:action="@{/profile}" th:object="${user}" method="post">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="firstName">First Name:</label>
+                            <input type="text" id="firstName" th:field="*{firstName}" required>
+                            <div th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}" class="error"></div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="lastName">Last Name:</label>
+                            <input type="text" id="lastName" th:field="*{lastName}" required>
+                            <div th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}" class="error"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="username">Username:</label>
+                        <input type="text" id="username" th:field="*{username}" readonly>
+                        <small>Username cannot be changed</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">Email:</label>
+                        <input type="email" id="email" th:field="*{email}" required>
+                        <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="error"></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="phoneNumber">Phone Number:</label>
+                        <input type="tel" id="phoneNumber" th:field="*{phoneNumber}">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="address">Address:</label>
+                        <textarea id="address" th:field="*{address}" rows="3"></textarea>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">Update Profile</button>
+                </form>
+            </div>
+            
+            <div class="profile-stats">
+                <h3>Account Statistics</h3>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <label>Member Since:</label>
+                        <span th:text="${#temporals.format(user.createdAt, 'MMM dd, yyyy')}"></span>
+                    </div>
+                    <div class="stat-item" th:if="${user.lastLoginAt}">
+                        <label>Last Login:</label>
+                        <span th:text="${#temporals.format(user.lastLoginAt, 'MMM dd, yyyy HH:mm')}"></span>
+                    </div>
+                    <div class="stat-item">
+                        <label>Account Status:</label>
+                        <span th:if="${user.enabled}" class="status-active">Active</span>
+                        <span th:unless="${user.enabled}" class="status-inactive">Inactive</span>
+                    </div>
+                    <div class="stat-item">
+                        <label>Account Type:</label>
+                        <span th:if="${user.admin}" class="status-admin">Administrator</span>
+                        <span th:unless="${user.admin}" class="status-user">Regular User</span>
+                    </div>
+                </div>
+                
+                <div class="profile-actions">
+                    <a href="/orders" class="btn btn-secondary">View My Orders</a>
+                    <a href="/cart" class="btn btn-secondary">View My Cart</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

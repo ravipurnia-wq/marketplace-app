@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - TechMarket Pro</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛒</text></svg>">
+</head>
+<body>
+    <nav>
+        <div class="nav-container">
+            <a href="/" class="logo">🛒 TechMarket Pro</a>
+            <ul class="nav-links">
+                <li><a href="/">Home</a></li>
+                <li><a href="/products">Products</a></li>
+                <li><a href="/about">About</a></li>
+                <li><a href="/contact" style="color: #667eea;">Contact</a></li>
+                <li><a href="/admin">Admin</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <header>
+        <div class="container">
+            <h1>Contact Us</h1>
+            <p class="subtitle">Get in touch with our team</p>
+        </div>
+    </header>
+    
+    <main class="main-content">
+        <div class="container">
+            <section style="display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; margin: 3rem 0; align-items: start;">
+                <div style="background: white; padding: 2rem; border-radius: 20px; box-shadow: 0 15px 40px rgba(0,0,0,0.1);">
+                    <h2 style="color: #667eea; margin-bottom: 2rem;">Send us a Message</h2>
+                    <form id="contactForm" style="display: flex; flex-direction: column; gap: 1rem;">
+                        <div>
+                            <label for="name" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Name</label>
+                            <input type="text" id="name" name="name" required style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 16px;">
+                        </div>
+                        <div>
+                            <label for="email" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Email</label>
+                            <input type="email" id="email" name="email" required style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 16px;">
+                        </div>
+                        <div>
+                            <label for="subject" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Subject</label>
+                            <select id="subject" name="subject" style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 16px;">
+                                <option value="general">General Inquiry</option>
+                                <option value="support">Product Support</option>
+                                <option value="billing">Billing Question</option>
+                                <option value="partnership">Partnership</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="message" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Message</label>
+                            <textarea id="message" name="message" rows="5" required style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 16px; resize: vertical;"></textarea>
+                        </div>
+                        <button type="submit" class="btn-api" style="align-self: flex-start; margin-top: 1rem;">
+                            📧 Send Message
+                        </button>
+                    </form>
+                </div>
+                
+                <div>
+                    <div style="background: white; padding: 2rem; border-radius: 20px; box-shadow: 0 15px 40px rgba(0,0,0,0.1); margin-bottom: 2rem;">
+                        <h3 style="color: #667eea; margin-bottom: 1.5rem;">Get in Touch</h3>
+                        <div style="margin-bottom: 1rem;">
+                            <strong>📧 Email:</strong><br>
+                            <a href="mailto:contact@techmarketpro.com" style="color: #667eea;">contact@techmarketpro.com</a>
+                        </div>
+                        <div style="margin-bottom: 1rem;">
+                            <strong>📞 Phone:</strong><br>
+                            <a href="tel:+1234567890" style="color: #667eea;">+1 (234) 567-890</a>
+                        </div>
+                        <div style="margin-bottom: 1rem;">
+                            <strong>📍 Address:</strong><br>
+                            123 Tech Street<br>
+                            Innovation City, TC 12345
+                        </div>
+                        <div>
+                            <strong>🕒 Business Hours:</strong><br>
+                            Monday - Friday: 9:00 AM - 6:00 PM<br>
+                            Saturday: 10:00 AM - 4:00 PM<br>
+                            Sunday: Closed
+                        </div>
+                    </div>
+                    
+                    <div style="background: white; padding: 2rem; border-radius: 20px; box-shadow: 0 15px 40px rgba(0,0,0,0.1);">
+                        <h3 style="color: #667eea; margin-bottom: 1.5rem;">Quick Links</h3>
+                        <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                            <a href="/api/products" style="color: #667eea; text-decoration: none;">🔗 REST API Documentation</a>
+                            <a href="/h2-console" style="color: #667eea; text-decoration: none;">🗄️ Database Console</a>
+                            <a href="/admin" style="color: #667eea; text-decoration: none;">⚙️ Admin Panel</a>
+                            <a href="https://github.com" style="color: #667eea; text-decoration: none;" target="_blank">📱 GitHub Repository</a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+    
+    <footer>
+        <div class="container">
+            <div style="text-align: center; padding: 2rem 0;">
+                <h3 style="color: white; margin-bottom: 1rem;">🛒 TechMarket Pro</h3>
+                <p style="margin-bottom: 1rem;">Your trusted partner for premium electronics and gadgets</p>
+                <div style="display: flex; justify-content: center; gap: 2rem; margin-bottom: 1rem; flex-wrap: wrap;">
+                    <a href="/about" style="color: #ccc; text-decoration: none;">About Us</a>
+                    <a href="/contact" style="color: #ccc; text-decoration: none;">Contact</a>
+                    <a href="/api/products" style="color: #ccc; text-decoration: none;">API</a>
+                    <a href="/h2-console" style="color: #ccc; text-decoration: none;">Database</a>
+                </div>
+                <p style="font-size: 0.9rem; color: #999;">&copy; 2024 TechMarket Pro. All rights reserved. | Powered by Spring Boot</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const data = Object.fromEntries(formData);
+            
+            // Simulate form submission
+            const submitBtn = this.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '⏳ Sending...';
+            submitBtn.disabled = true;
+            
+            setTimeout(() => {
+                submitBtn.innerHTML = '✅ Message Sent!';
+                alert('Thank you for your message! We\'ll get back to you soon.');
+                this.reset();
+                
+                setTimeout(() => {
+                    submitBtn.innerHTML = originalText;
+                    submitBtn.disabled = false;
+                }, 2000);
+            }, 1500);
+        });
+    </script>
+</body>
+</html>

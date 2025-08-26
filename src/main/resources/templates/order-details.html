@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Details - TechMarket Pro</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <a href="/">TechMarket Pro</a>
+            </div>
+            <div class="nav-links">
+                <a href="/">Home</a>
+                <a href="/products">Products</a>
+                <a href="/about">About</a>
+                <a href="/contact">Contact</a>
+                <div sec:authorize="isAuthenticated()">
+                    <a href="/cart">Cart</a>
+                    <a href="/orders">Orders</a>
+                    <a href="/profile">Profile</a>
+                    <a href="/logout">Logout</a>
+                </div>
+                <div sec:authorize="hasRole('ADMIN')">
+                    <a href="/admin">Admin</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="order-details-header">
+            <h1>Order Details</h1>
+            <a href="/orders" class="btn btn-secondary">← Back to Orders</a>
+        </div>
+        
+        <div class="order-details-content">
+            <div class="order-info-section">
+                <div class="order-summary">
+                    <h3>Order #<span th:text="${order.id}"></span></h3>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <label>Order Date:</label>
+                            <span th:text="${#temporals.format(order.createdAt, 'MMM dd, yyyy HH:mm')}"></span>
+                        </div>
+                        <div class="info-item">
+                            <label>Status:</label>
+                            <span class="status-badge" th:classappend="${order.status.name().toLowerCase()}" 
+                                  th:text="${order.status.displayName}"></span>
+                        </div>
+                        <div class="info-item">
+                            <label>Customer:</label>
+                            <span th:text="${order.customerName}"></span>
+                        </div>
+                        <div class="info-item">
+                            <label>Email:</label>
+                            <span th:text="${order.userEmail}"></span>
+                        </div>
+                        <div class="info-item" th:if="${order.phoneNumber}">
+                            <label>Phone:</label>
+                            <span th:text="${order.phoneNumber}"></span>
+                        </div>
+                        <div class="info-item" th:if="${order.shippingAddress}">
+                            <label>Shipping Address:</label>
+                            <span th:text="${order.shippingAddress}"></span>
+                        </div>
+                        <div class="info-item" th:if="${order.paypalTransactionId}">
+                            <label>PayPal Transaction:</label>
+                            <span th:text="${order.paypalTransactionId}"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="order-items-section">
+                <h3>Ordered Items</h3>
+                <div class="order-items-list">
+                    <div th:each="item : ${order.items}" class="order-item">
+                        <div class="item-image">
+                            <img th:src="${item.productImageUrl}" th:alt="${item.productName}" onerror="this.src='/images/placeholder.png'">
+                        </div>
+                        <div class="item-details">
+                            <h4 th:text="${item.productName}"></h4>
+                            <p class="item-price">$<span th:text="${#numbers.formatDecimal(item.productPrice, 1, 2)}"></span> each</p>
+                        </div>
+                        <div class="item-quantity">
+                            <span>Qty: <span th:text="${item.quantity}"></span></span>
+                        </div>
+                        <div class="item-subtotal">
+                            $<span th:text="${#numbers.formatDecimal(item.subtotal, 1, 2)}"></span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="order-total">
+                    <div class="total-row">
+                        <span>Total Items:</span>
+                        <span th:text="${order.totalItems}"></span>
+                    </div>
+                    <div class="total-row final-total">
+                        <span>Total Amount:</span>
+                        <span>$<span th:text="${#numbers.formatDecimal(order.totalAmount, 1, 2)}"></span></span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="order-timeline" th:if="${order.status.name() != 'PENDING'}">
+                <h3>Order Timeline</h3>
+                <div class="timeline">
+                    <div class="timeline-item active">
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content">
+                            <h4>Order Placed</h4>
+                            <p th:text="${#temporals.format(order.createdAt, 'MMM dd, yyyy HH:mm')}"></p>
+                        </div>
+                    </div>
+                    <div class="timeline-item" th:classappend="${order.status.name() != 'PENDING' ? 'active' : ''}">
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content">
+                            <h4>Order Confirmed</h4>
+                            <p th:if="${order.status.name() != 'PENDING'}" th:text="${#temporals.format(order.updatedAt, 'MMM dd, yyyy HH:mm')}"></p>
+                        </div>
+                    </div>
+                    <div class="timeline-item" th:classappend="${order.shippedAt != null ? 'active' : ''}" th:if="${order.shippedAt != null}">
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content">
+                            <h4>Order Shipped</h4>
+                            <p th:text="${#temporals.format(order.shippedAt, 'MMM dd, yyyy HH:mm')}"></p>
+                        </div>
+                    </div>
+                    <div class="timeline-item" th:classappend="${order.deliveredAt != null ? 'active' : ''}" th:if="${order.deliveredAt != null}">
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content">
+                            <h4>Order Delivered</h4>
+                            <p th:text="${#temporals.format(order.deliveredAt, 'MMM dd, yyyy HH:mm')}"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

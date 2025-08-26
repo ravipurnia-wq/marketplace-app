@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - TechMarket Pro</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛒</text></svg>">
+</head>
+<body>
+    <nav>
+        <div class="nav-container">
+            <a href="/" class="logo">🛒 TechMarket Pro</a>
+            <ul class="nav-links">
+                <li><a href="/">Home</a></li>
+                <li><a href="/products">Products</a></li>
+                <li><a href="/about" style="color: #667eea;">About</a></li>
+                <li><a href="/contact">Contact</a></li>
+                <li><a href="/admin">Admin</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <header>
+        <div class="container">
+            <h1>About TechMarket Pro</h1>
+            <p class="subtitle">Your trusted partner in premium electronics</p>
+        </div>
+    </header>
+    
+    <main class="main-content">
+        <div class="container">
+            <section class="hero">
+                <h2>Our Story</h2>
+                <p>TechMarket Pro was founded with a simple mission: to provide premium electronics and gadgets with exceptional customer service and secure payment processing.</p>
+            </section>
+            
+            <section style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin: 3rem 0;">
+                <div style="background: white; padding: 2rem; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+                    <h3 style="color: #667eea; margin-bottom: 1rem;">🎯 Our Mission</h3>
+                    <p>To democratize access to premium technology by offering carefully curated electronics at competitive prices with world-class customer service.</p>
+                </div>
+                
+                <div style="background: white; padding: 2rem; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+                    <h3 style="color: #667eea; margin-bottom: 1rem;">🏆 Our Vision</h3>
+                    <p>To become the world's most trusted marketplace for premium electronics, where quality meets innovation and customer satisfaction is guaranteed.</p>
+                </div>
+                
+                <div style="background: white; padding: 2rem; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+                    <h3 style="color: #667eea; margin-bottom: 1rem;">💎 Our Values</h3>
+                    <p>Quality, integrity, innovation, and customer-first approach guide everything we do. We believe in building lasting relationships through trust and excellence.</p>
+                </div>
+            </section>
+            
+            <section style="background: white; padding: 3rem; border-radius: 20px; box-shadow: 0 15px 40px rgba(0,0,0,0.1); margin: 3rem 0;">
+                <h2 style="text-align: center; color: #667eea; margin-bottom: 2rem;">Why Choose TechMarket Pro?</h2>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem;">
+                    <div style="text-align: center;">
+                        <div style="font-size: 3rem; margin-bottom: 1rem;">🔒</div>
+                        <h4>Secure Payments</h4>
+                        <p>PayPal integration ensures your transactions are safe and secure</p>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="font-size: 3rem; margin-bottom: 1rem;">⚡</div>
+                        <h4>REST API</h4>
+                        <p>Modern Spring Boot architecture with full REST API support</p>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="font-size: 3rem; margin-bottom: 1rem;">📱</div>
+                        <h4>Responsive Design</h4>
+                        <p>Optimized for all devices - desktop, tablet, and mobile</p>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="font-size: 3rem; margin-bottom: 1rem;">🚀</div>
+                        <h4>High Performance</h4>
+                        <p>Built with modern technologies for lightning-fast performance</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+    
+    <footer>
+        <div class="container">
+            <div style="text-align: center; padding: 2rem 0;">
+                <h3 style="color: white; margin-bottom: 1rem;">🛒 TechMarket Pro</h3>
+                <p style="margin-bottom: 1rem;">Your trusted partner for premium electronics and gadgets</p>
+                <div style="display: flex; justify-content: center; gap: 2rem; margin-bottom: 1rem; flex-wrap: wrap;">
+                    <a href="/about" style="color: #ccc; text-decoration: none;">About Us</a>
+                    <a href="/contact" style="color: #ccc; text-decoration: none;">Contact</a>
+                    <a href="/api/products" style="color: #ccc; text-decoration: none;">API</a>
+                    <a href="/h2-console" style="color: #ccc; text-decoration: none;">Database</a>
+                </div>
+                <p style="font-size: 0.9rem; color: #999;">&copy; 2024 TechMarket Pro. All rights reserved. | Powered by Spring Boot</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Error - TechMarket Pro</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛒</text></svg>">
+    <style>
+        .error-container {
+            max-width: 600px;
+            margin: 4rem auto;
+            text-align: center;
+            background: white;
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+        }
+        .error-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            color: #e74c3c;
+        }
+        .error-title {
+            color: #e74c3c;
+            margin-bottom: 1rem;
+        }
+        .error-message {
+            color: #666;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+        .error-details {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            font-family: monospace;
+            font-size: 0.9rem;
+            color: #666;
+        }
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="nav-container">
+            <a href="/" class="logo">🛒 TechMarket Pro</a>
+            <ul class="nav-links">
+                <li><a href="/">Home</a></li>
+                <li><a href="/products">Products</a></li>
+                <li><a href="/about">About</a></li>
+                <li><a href="/contact">Contact</a></li>
+                <li><a href="/admin">Admin</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="container">
+            <div class="error-container">
+                <div class="error-icon">🚫</div>
+                <h1 class="error-title">Error <span th:text="${errorCode}">Unknown</span></h1>
+                <div class="error-message">
+                    <p th:text="${errorMessage}">An error occurred</p>
+                    <div class="error-details" th:if="${requestedUrl}">
+                        <strong>Requested URL:</strong> <span th:text="${requestedUrl}"></span>
+                    </div>
+                </div>
+                
+                <div class="action-buttons">
+                    <a href="/" class="btn-api">🏠 Go Home</a>
+                    <a href="/products" class="btn-api">🛍️ View Products</a>
+                    <a href="javascript:history.back()" class="btn-api">⬅️ Go Back</a>
+                </div>
+                
+                <div style="margin-top: 2rem; font-size: 0.9rem; color: #999;">
+                    <p>Common working URLs:</p>
+                    <ul style="list-style: none; padding: 0;">
+                        <li><a href="/" style="color: #667eea;">/ - Homepage</a></li>
+                        <li><a href="/products" style="color: #667eea;">/products - Product List</a></li>
+                        <li><a href="/admin" style="color: #667eea;">/admin - Admin Panel</a></li>
+                        <li><a href="/api/products" style="color: #667eea;">/api/products - API Endpoint</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <footer>
+        <div class="container">
+            <div style="text-align: center; padding: 2rem 0;">
+                <h3 style="color: white; margin-bottom: 1rem;">🛒 TechMarket Pro</h3>
+                <p style="margin-bottom: 1rem;">Your trusted partner for premium electronics and gadgets</p>
+                <p style="font-size: 0.9rem; color: #999;">&copy; 2024 TechMarket Pro. All rights reserved. | Powered by Spring Boot</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Successful - TechMarket Pro</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛒</text></svg>">
+    <style>
+        .success-container {
+            max-width: 600px;
+            margin: 4rem auto;
+            text-align: center;
+            background: white;
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+        }
+        .success-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            color: #27ae60;
+        }
+        .success-title {
+            color: #27ae60;
+            margin-bottom: 1rem;
+        }
+        .success-message {
+            color: #666;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="nav-container">
+            <a href="/" class="logo">🛒 TechMarket Pro</a>
+            <ul class="nav-links">
+                <li><a href="/">Home</a></li>
+                <li><a href="/products">Products</a></li>
+                <li><a href="/about">About</a></li>
+                <li><a href="/contact">Contact</a></li>
+                <li><a href="/admin">Admin</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="container">
+            <div class="success-container">
+                <div class="success-icon">🎉</div>
+                <h1 class="success-title">Payment Successful!</h1>
+                <div class="success-message">
+                    <p>Thank you for your purchase! Your payment has been processed successfully.</p>
+                    
+                    <div id="paymentDetails" style="background: #f8f9fa; border-radius: 8px; padding: 20px; margin: 20px 0; border-left: 4px solid #27ae60;">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; text-align: left; max-width: 300px; margin: 0 auto;">
+                            <div><strong>Items:</strong></div>
+                            <div id="itemCount">1 item</div>
+                            <div><strong>Amount:</strong></div>
+                            <div id="amount">$0.00</div>
+                            <div><strong>Payment Method:</strong></div>
+                            <div>PayPal</div>
+                            <div><strong>Status:</strong></div>
+                            <div style="color: #27ae60; font-weight: 600;">Completed</div>
+                        </div>
+                    </div>
+                    
+                    <div id="demoNotice" style="background: #fff3cd; border: 1px solid #ffeaa7; border-radius: 8px; padding: 16px; margin: 20px 0; display: none;">
+                        <p style="color: #856404; margin: 0;">
+                            <strong>Demo Mode:</strong> This is a simulated payment for demonstration purposes. 
+                            No actual payment was processed.
+                        </p>
+                    </div>
+                    
+                    <p>You will receive a confirmation email from PayPal shortly with your transaction details.</p>
+                    <p>Your order will be processed and shipped according to our standard delivery times.</p>
+                </div>
+                
+                <div class="action-buttons">
+                    <a href="/" class="btn-api">🏠 Return Home</a>
+                    <a href="/products" class="btn-api">🛍️ Continue Shopping</a>
+                    <a href="/contact" class="btn-api">📞 Contact Support</a>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <footer>
+        <div class="container">
+            <div style="text-align: center; padding: 2rem 0;">
+                <h3 style="color: white; margin-bottom: 1rem;">🛒 TechMarket Pro</h3>
+                <p style="margin-bottom: 1rem;">Your trusted partner for premium electronics and gadgets</p>
+                <p style="font-size: 0.9rem; color: #999;">&copy; 2024 TechMarket Pro. All rights reserved. | Powered by Spring Boot</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const isDemo = urlParams.get('demo') === 'true';
+            const amount = urlParams.get('amount');
+            const items = urlParams.get('items');
+            
+            if (isDemo) {
+                document.getElementById('demoNotice').style.display = 'block';
+            }
+            
+            if (amount) {
+                document.getElementById('amount').textContent = '$' + parseFloat(amount).toFixed(2);
+            }
+            
+            if (items) {
+                const itemText = items + ' item' + (items !== '1' ? 's' : '');
+                document.getElementById('itemCount').textContent = itemText;
+            }
+        });
+        
+        // Auto-redirect after 30 seconds
+        setTimeout(() => {
+            if (confirm('Would you like to return to the homepage?')) {
+                window.location.href = '/';
+            }
+        }, 30000);
+    </script>
+</body>
+</html>

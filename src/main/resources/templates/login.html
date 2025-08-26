@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In - TechMarket Pro</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <!-- Simple Header for Login -->
+    <header class="walmart-header">
+        <div class="header-main">
+            <div class="container">
+                <div class="header-content">
+                    <a href="/" class="logo">TechMarket Pro</a>
+                    <div class="header-actions">
+                        <a href="/register" class="header-action">
+                            <span class="action-icon">📝</span>
+                            <span>Create Account</span>
+                        </a>
+                        <a href="/" class="header-action">
+                            <span class="action-icon">🏠</span>
+                            <span>Home</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="container">
+            <div class="form-container">
+                <h1 class="form-title">Sign in to your account</h1>
+                
+                <div th:if="${error}" class="alert alert-error">
+                    <span th:text="${error}"></span>
+                </div>
+                
+                <div th:if="${success}" class="alert alert-success">
+                    <span th:text="${success}"></span>
+                </div>
+                
+                <form th:action="@{/login}" method="post">
+                    <div class="form-group">
+                        <label for="username" class="form-label">Username or Email</label>
+                        <input type="text" id="username" name="username" class="form-input" required 
+                               placeholder="Enter your username or email">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="password" class="form-label">Password</label>
+                        <input type="password" id="password" name="password" class="form-input" required
+                               placeholder="Enter your password">
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary w-full">Sign In</button>
+                </form>
+                
+                <div class="form-links">
+                    <p>New to TechMarket Pro? <a href="/register">Create your TechMarket Pro account</a></p>
+                    <p><a href="#">Forgot your password?</a></p>
+                </div>
+                
+                <div style="text-align: center; margin-top: 20px; padding-top: 20px; border-top: 1px solid #e5e5e5;">
+                    <p style="font-size: 12px; color: #46474a;">
+                        By continuing, you agree to TechMarket Pro's Terms of Service and acknowledge our Privacy Policy.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Orders - TechMarket Pro</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <a href="/">TechMarket Pro</a>
+            </div>
+            <div class="nav-links">
+                <a href="/">Home</a>
+                <a href="/products">Products</a>
+                <a href="/about">About</a>
+                <a href="/contact">Contact</a>
+                <div sec:authorize="isAuthenticated()">
+                    <a href="/cart">Cart</a>
+                    <a href="/orders">Orders</a>
+                    <a href="/profile">Profile</a>
+                    <a href="/logout">Logout</a>
+                </div>
+                <div sec:authorize="hasRole('ADMIN')">
+                    <a href="/admin">Admin</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h1>My Orders</h1>
+        
+        <div th:if="${orders.empty}" class="empty-orders">
+            <h3>You haven't placed any orders yet</h3>
+            <p>Start shopping by browsing our <a href="/products">products</a>.</p>
+        </div>
+        
+        <div th:unless="${orders.empty}" class="orders-content">
+            <div th:each="order : ${orders.content}" class="order-card">
+                <div class="order-header">
+                    <div class="order-info">
+                        <h3>Order #<span th:text="${order.id}"></span></h3>
+                        <p class="order-date" th:text="${#temporals.format(order.createdAt, 'MMM dd, yyyy HH:mm')}"></p>
+                    </div>
+                    <div class="order-status">
+                        <span class="status-badge" th:classappend="${order.status.name().toLowerCase()}" 
+                              th:text="${order.status.displayName}"></span>
+                    </div>
+                </div>
+                
+                <div class="order-details">
+                    <div class="order-items">
+                        <p><strong>Items:</strong> <span th:text="${order.totalItems}"></span></p>
+                        <p><strong>Total:</strong> $<span th:text="${#numbers.formatDecimal(order.totalAmount, 1, 2)}"></span></p>
+                        <p th:if="${order.shippingAddress}"><strong>Shipping:</strong> <span th:text="${order.shippingAddress}"></span></p>
+                    </div>
+                    
+                    <div class="order-actions">
+                        <a th:href="@{/orders/{id}(id=${order.id})}" class="btn btn-secondary btn-small">View Details</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Pagination -->
+            <div th:if="${orders.totalPages > 1}" class="pagination">
+                <a th:if="${orders.hasPrevious()}" 
+                   th:href="@{/orders(page=${orders.number - 1})}" 
+                   class="btn btn-secondary">Previous</a>
+                
+                <span class="page-info">
+                    Page <span th:text="${orders.number + 1}"></span> of <span th:text="${orders.totalPages}"></span>
+                </span>
+                
+                <a th:if="${orders.hasNext()}" 
+                   th:href="@{/orders(page=${orders.number + 1})}" 
+                   class="btn btn-secondary">Next</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

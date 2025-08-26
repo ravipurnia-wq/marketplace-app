@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Cancelled - TechMarket Pro</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛒</text></svg>">
+    <style>
+        .cancel-container {
+            max-width: 600px;
+            margin: 4rem auto;
+            text-align: center;
+            background: white;
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+        }
+        .cancel-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            color: #e74c3c;
+        }
+        .cancel-title {
+            color: #e74c3c;
+            margin-bottom: 1rem;
+        }
+        .cancel-message {
+            color: #666;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="nav-container">
+            <a href="/" class="logo">🛒 TechMarket Pro</a>
+            <ul class="nav-links">
+                <li><a href="/">Home</a></li>
+                <li><a href="/products">Products</a></li>
+                <li><a href="/about">About</a></li>
+                <li><a href="/contact">Contact</a></li>
+                <li><a href="/admin">Admin</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="container">
+            <div class="cancel-container">
+                <div class="cancel-icon">😔</div>
+                <h1 class="cancel-title">Payment Cancelled</h1>
+                <div class="cancel-message">
+                    <p>Your payment was cancelled and no charges were made.</p>
+                    <p>If you experienced any issues during the payment process, please don't hesitate to contact our support team.</p>
+                    <p>You can try your purchase again or browse our other products.</p>
+                </div>
+                
+                <div class="action-buttons">
+                    <a href="/" class="btn-api">🏠 Return Home</a>
+                    <a href="/products" class="btn-api">🛍️ Try Again</a>
+                    <a href="/contact" class="btn-api">📞 Get Help</a>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <footer>
+        <div class="container">
+            <div style="text-align: center; padding: 2rem 0;">
+                <h3 style="color: white; margin-bottom: 1rem;">🛒 TechMarket Pro</h3>
+                <p style="margin-bottom: 1rem;">Your trusted partner for premium electronics and gadgets</p>
+                <p style="font-size: 0.9rem; color: #999;">&copy; 2024 TechMarket Pro. All rights reserved. | Powered by Spring Boot</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Auto-redirect after 15 seconds
+        setTimeout(() => {
+            window.location.href = '/products';
+        }, 15000);
+    </script>
+</body>
+</html>
