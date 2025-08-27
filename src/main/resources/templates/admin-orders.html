@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Admin - Orders</title>
+</head>
+<body>
+    <h1>Admin Orders</h1>
+    <div th:if="${orders}">
+        <div th:each="order : ${orders}">
+            <p th:text="${order.id}">Order ID</p>
+        </div>
+    </div>
+</body>
+</html>

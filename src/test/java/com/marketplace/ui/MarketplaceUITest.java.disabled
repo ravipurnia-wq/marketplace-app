@@ -1,0 +1,189 @@
+package com.marketplace.ui;
+
+import io.github.bonigarcia.wdm.WebDriverManager;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.test.context.ActiveProfiles;
+
+import java.time.Duration;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@ActiveProfiles("test")
+public class MarketplaceUITest {
+
+    @LocalServerPort
+    private int port;
+
+    private WebDriver driver;
+    private WebDriverWait wait;
+    private String baseUrl;
+
+    @BeforeAll
+    static void setupWebDriver() {
+        WebDriverManager.chromedriver().setup();
+    }
+
+    @BeforeEach
+    void setUp() {
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("--headless"); // Run in headless mode for CI/CD
+        options.addArguments("--no-sandbox");
+        options.addArguments("--disable-dev-shm-usage");
+        options.addArguments("--disable-gpu");
+        options.addArguments("--window-size=1920,1080");
+        
+        driver = new ChromeDriver(options);
+        wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        baseUrl = "http://localhost:" + port;
+    }
+
+    @AfterEach
+    void tearDown() {
+        if (driver != null) {
+            driver.quit();
+        }
+    }
+
+    @Test
+    void homePage_shouldLoadSuccessfully() {
+        // When
+        driver.get(baseUrl);
+        
+        // Then
+        wait.until(ExpectedConditions.titleContains("TechMarket"));
+        assertTrue(driver.getTitle().contains("TechMarket"));
+        
+        // Verify main page elements are present
+        WebElement body = wait.until(ExpectedConditions.presenceOfElementLocated(By.tagName("body")));
+        assertNotNull(body);
+    }
+
+    @Test
+    void navigationMenu_shouldBePresent() {
+        // When
+        driver.get(baseUrl);
+        
+        // Then - Check for common navigation elements
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.tagName("body")));
+        
+        // Look for navigation or header elements
+        boolean hasNavigation = driver.findElements(By.tagName("nav")).size() > 0 ||
+                               driver.findElements(By.className("navbar")).size() > 0 ||
+                               driver.findElements(By.tagName("header")).size() > 0;
+        
+        assertTrue(hasNavigation, "Navigation menu should be present on the page");
+    }
+
+    @Test
+    void loginPage_shouldBeAccessible() {
+        // When
+        driver.get(baseUrl + "/login");
+        
+        // Then
+        wait.until(ExpectedConditions.titleContains("Login"));
+        assertTrue(driver.getTitle().contains("Login") || driver.getCurrentUrl().contains("login"));
+        
+        // Check for login form elements
+        boolean hasLoginForm = driver.findElements(By.name("username")).size() > 0 ||
+                              driver.findElements(By.name("email")).size() > 0 ||
+                              driver.findElements(By.id("username")).size() > 0 ||
+                              driver.findElements(By.id("email")).size() > 0;
+        
+        assertTrue(hasLoginForm, "Login form should be present");
+    }
+
+    @Test
+    void productsPage_shouldDisplayProducts() {
+        // When
+        driver.get(baseUrl + "/products");
+        
+        // Then
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.tagName("body")));
+        
+        // Check if products page loads (even if no products are displayed)
+        String pageSource = driver.getPageSource().toLowerCase();
+        boolean isProductsPage = driver.getCurrentUrl().contains("products") ||
+                                pageSource.contains("product") ||
+                                pageSource.contains("marketplace") ||
+                                pageSource.contains("shop");
+        
+        assertTrue(isProductsPage, "Products page should load successfully");
+    }
+
+    @Test
+    void registrationPage_shouldBeAccessible() {
+        // When
+        driver.get(baseUrl + "/register");
+        
+        // Then
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.tagName("body")));
+        
+        // Check if we're on registration page or redirected appropriately
+        boolean isRegistrationPage = driver.getCurrentUrl().contains("register") ||
+                                    driver.getPageSource().toLowerCase().contains("register") ||
+                                    driver.getPageSource().toLowerCase().contains("sign up");
+        
+        assertTrue(isRegistrationPage, "Registration page should be accessible");
+    }
+
+    @Test
+    void aboutPage_shouldBeAccessible() {
+        // When
+        driver.get(baseUrl + "/about");
+        
+        // Then
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.tagName("body")));
+        
+        // Check if about page loads successfully
+        boolean isAboutPage = driver.getCurrentUrl().contains("about") ||
+                             driver.getPageSource().toLowerCase().contains("about");
+        
+        assertTrue(isAboutPage, "About page should be accessible");
+    }
+
+    @Test
+    void responsiveDesign_shouldWorkOnMobileSize() {
+        // When - Set mobile viewport size
+        driver.manage().window().setSize(new org.openqa.selenium.Dimension(375, 667));
+        driver.get(baseUrl);
+        
+        // Then
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.tagName("body")));
+        
+        // Verify page still loads and is functional on mobile size
+        WebElement body = driver.findElement(By.tagName("body"));
+        assertNotNull(body);
+        
+        // Check that the page width adapts to mobile
+        String viewport = (String) ((org.openqa.selenium.JavascriptExecutor) driver)
+                .executeScript("return document.documentElement.clientWidth;");
+        
+        assertTrue(Integer.parseInt(viewport) <= 375, "Page should adapt to mobile viewport");
+    }
+
+    @Test
+    void pageLoadTime_shouldBeReasonable() {
+        // When
+        long startTime = System.currentTimeMillis();
+        driver.get(baseUrl);
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.tagName("body")));
+        long endTime = System.currentTimeMillis();
+        
+        // Then
+        long loadTime = endTime - startTime;
+        assertTrue(loadTime < 10000, "Page should load within 10 seconds, actual: " + loadTime + "ms");
+    }
+}

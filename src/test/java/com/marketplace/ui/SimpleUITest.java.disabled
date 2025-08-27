@@ -1,0 +1,183 @@
+package com.marketplace.ui;
+
+import io.github.bonigarcia.wdm.WebDriverManager;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+
+import java.time.Duration;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+/**
+ * Simple UI tests that can run against any web application.
+ * These tests don't require Spring context and can test external URLs.
+ */
+public class SimpleUITest {
+
+    private WebDriver driver;
+    private WebDriverWait wait;
+
+    @BeforeAll
+    static void setupWebDriver() {
+        WebDriverManager.chromedriver().setup();
+    }
+
+    @BeforeEach
+    void setUp() {
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("--headless"); // Run in headless mode
+        options.addArguments("--no-sandbox");
+        options.addArguments("--disable-dev-shm-usage");
+        options.addArguments("--disable-gpu");
+        options.addArguments("--window-size=1920,1080");
+        
+        driver = new ChromeDriver(options);
+        wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+    }
+
+    @AfterEach
+    void tearDown() {
+        if (driver != null) {
+            driver.quit();
+        }
+    }
+
+    @Test
+    void googleHomePage_shouldLoadSuccessfully() {
+        // When
+        driver.get("https://www.google.com");
+        
+        // Then
+        wait.until(ExpectedConditions.titleContains("Google"));
+        assertTrue(driver.getTitle().contains("Google"));
+        
+        // Verify search box is present
+        WebElement searchBox = wait.until(ExpectedConditions.presenceOfElementLocated(By.name("q")));
+        assertNotNull(searchBox);
+        assertTrue(searchBox.isDisplayed());
+    }
+
+    @Test
+    void googleSearch_shouldWork() {
+        // Given
+        driver.get("https://www.google.com");
+        
+        // When
+        WebElement searchBox = wait.until(ExpectedConditions.elementToBeClickable(By.name("q")));
+        searchBox.sendKeys("Selenium WebDriver");
+        searchBox.submit();
+        
+        // Then
+        wait.until(ExpectedConditions.titleContains("Selenium WebDriver"));
+        assertTrue(driver.getTitle().contains("Selenium WebDriver"));
+        
+        // Verify search results are displayed
+        WebElement results = wait.until(ExpectedConditions.presenceOfElementLocated(By.id("search")));
+        assertNotNull(results);
+    }
+
+    @Test
+    void browserNavigation_shouldWork() {
+        // Given
+        driver.get("https://www.google.com");
+        String originalTitle = driver.getTitle();
+        
+        // When - Navigate to another page
+        driver.get("https://www.github.com");
+        wait.until(ExpectedConditions.titleContains("GitHub"));
+        
+        // Navigate back
+        driver.navigate().back();
+        
+        // Then
+        wait.until(ExpectedConditions.titleContains("Google"));
+        assertEquals(originalTitle, driver.getTitle());
+    }
+
+    @Test
+    void mobileViewport_shouldWork() {
+        // When - Set mobile viewport
+        driver.manage().window().setSize(new org.openqa.selenium.Dimension(375, 667));
+        driver.get("https://www.google.com");
+        
+        // Then
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.name("q")));
+        
+        // Verify viewport width
+        Long viewportWidth = (Long) ((org.openqa.selenium.JavascriptExecutor) driver)
+                .executeScript("return window.innerWidth;");
+        
+        assertEquals(375, viewportWidth.intValue());
+    }
+
+    @Test
+    void jsExecution_shouldWork() {
+        // Given
+        driver.get("https://www.google.com");
+        
+        // When - Execute JavaScript
+        String pageTitle = (String) ((org.openqa.selenium.JavascriptExecutor) driver)
+                .executeScript("return document.title;");
+        
+        // Then
+        assertNotNull(pageTitle);
+        assertTrue(pageTitle.contains("Google"));
+    }
+
+    @Test
+    void elementInteraction_shouldWork() {
+        // Given
+        driver.get("https://www.google.com");
+        
+        // When
+        WebElement searchBox = wait.until(ExpectedConditions.elementToBeClickable(By.name("q")));
+        
+        // Test various interactions
+        searchBox.click();
+        searchBox.sendKeys("test");
+        searchBox.clear();
+        searchBox.sendKeys("Selenium");
+        
+        // Then
+        assertEquals("Selenium", searchBox.getAttribute("value"));
+    }
+
+    @Test
+    void pageLoadPerformance_shouldBeReasonable() {
+        // When
+        long startTime = System.currentTimeMillis();
+        driver.get("https://www.google.com");
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.name("q")));
+        long endTime = System.currentTimeMillis();
+        
+        // Then
+        long loadTime = endTime - startTime;
+        assertTrue(loadTime < 10000, "Page should load within 10 seconds, actual: " + loadTime + "ms");
+    }
+
+    @Test
+    void multipleElementSelection_shouldWork() {
+        // Given
+        driver.get("https://www.google.com");
+        
+        // When
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.name("q")));
+        
+        // Find multiple elements
+        var links = driver.findElements(By.tagName("a"));
+        var buttons = driver.findElements(By.tagName("input"));
+        
+        // Then
+        assertFalse(links.isEmpty(), "Should find at least one link");
+        assertFalse(buttons.isEmpty(), "Should find at least one input element");
+    }
+}
